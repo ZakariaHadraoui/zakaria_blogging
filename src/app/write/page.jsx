@@ -26,9 +26,6 @@ const WritePage = () => {
   const [title, setTitle] = useState("");
   const [catSlug, setCatSlug] = useState("");
 
-
-  if (typeof window === 'undefined') return null; 
-
   useEffect(() => {
     const storage = getStorage(app);
     const upload = () => {
@@ -63,6 +60,10 @@ const WritePage = () => {
 
     file && upload();
   }, [file]);
+
+  if (typeof window === 'undefined') return null; 
+
+  
 
   if (status === "loading") {
     return <div className={styles.loading}>Loading...</div>;
