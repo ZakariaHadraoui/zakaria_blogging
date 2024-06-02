@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://blogs_owner:13ODEgRvACMV@ep-wispy-salad-a5nichx2.us-east-2.aws.neon.tech/blogs?sslmode=require"
 }
 
 model Account {
