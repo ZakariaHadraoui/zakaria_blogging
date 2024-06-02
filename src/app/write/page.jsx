@@ -1,5 +1,5 @@
 'use client'
-import { useClient } from 'next/dynamic';
+import dynamic from 'next/dynamic';
 import Image from "next/image";
 import styles from "./write.module.css";
 import { useEffect, useState } from "react";
@@ -156,4 +156,6 @@ const WritePage = () => {
   );
 };
 
-export default useClient(WritePage);
+export default dynamic(() => Promise.resolve(WritePage), {
+  ssr: false,
+});
