@@ -15,20 +15,25 @@ function Card({key,data}) {
   return (
     <div className={styles.container} key={key}>
        <div className={styles.imageContainer}>
-		<Image src={data.img} fill className={styles.image}/>
+        {data.img ? <Image src={data.img} fill className={styles.image}/> : ''}
        
 	 </div>
        <div className={styles.textContainer}>
+       <div className={styles.userImageContainer}>
+               {data.img ?  <Image src={data.user.image} alt="" fill className={styles.avatar} />:''}
+        </div>
+         <span>by : <span className={styles.user}>  {data.user.name}</span></span>
+
             <div className={styles.detail}>
-                  <span className={styles.date}>11.01.10</span>
-                  <span className={styles.category}>{data.catSlug}</span>
+                  <span>category :<span className={styles.category}>    {data.catSlug} </span> </span>
+                  <span className={styles.date}> --  {data.createdAt .substring(0,10)} </span>
 
             </div>
-            <Link href='/'>
+            <Link href={`/posts/${data.slug}`}>
                   <h1>{data.title}</h1>
             </Link>
-            <p className={styles.desc}>{data.desc}</p>
-       <Link className={styles.link} href='/readMore'>Read more</Link>
+            <div className={styles.desc} dangerouslySetInnerHTML={{ __html: data?.desc.substring(0,60) }}/>
+            <Link className={styles.link} href={`/posts/${data.slug}`}>Read more</Link>
        </div>
 
       

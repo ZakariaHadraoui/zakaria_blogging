@@ -1,20 +1,56 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 import styles from './comments.module.css'
 import Link from 'next/link'
 import Image from 'next/image'
+import useSWR from 'swr'
+import { useSession } from 'next-auth/react'
 
-function Comments() {
-	const status ='authenticated'
+function Comments({postSlug}) {
+  const fetcher = async (url) => {
+    const res = await fetch(url);
+  
+    const data = await res.json();
+    console.log(data)
+  
+    if (!res.ok) {
+      const error = new Error(data.message);
+      throw error;
+    }
+  
+    return data;
+  };
+  const [desc, setDesc] = useState("");
+
+
+
+  const handleSubmit = async () => {
+   if (desc!=='') {
+    await fetch("/api/comments", {
+      method: "POST",
+      body: JSON.stringify({ desc, postSlug }),
+    });
+    mutate();
+    
+   }
+  };
+
+
+  const {data,isLoading,mutate}=useSWR(`http://localhost:3000/api/comments?postSlug=${postSlug}`,
+    fetcher
+  )
+	const {status} =useSession()
   return (
 	<div className={styles.container}>
 		<h1 className={styles.title}>Comments</h1>
-		{status === "authenticated" ? (
+    {status === "authenticated" ? (
         <div className={styles.write}>
           <textarea
             placeholder="write a comment..."
             className={styles.input}
+            onChange={(e) => setDesc(e.target.value)}
           />
-          <button className={styles.button} >
+          <button className={styles.button} onClick={handleSubmit}>
             Send
           </button>
         </div>
@@ -23,40 +59,28 @@ function Comments() {
       )}
 	   <div className={styles.comments}>
         
-              <div className={styles.comment} >
+     {isLoading
+          ? "loading"
+          : data?.map((item) => (
+              <div className={styles.comment} key={item._id}>
                 <div className={styles.user}>
+                  {item?.user?.image && (
                     <Image
-                      src='/p1.jpeg'
+                      src={item.user.image}
                       alt=""
                       width={50}
                       height={50}
                       className={styles.image}
                     />
-                  
+                  )}
                   <div className={styles.userInfo}>
-                    <span className={styles.username}>zakaria</span>
-                    <span className={styles.date}>02.12.24</span>
+                    <span className={styles.username}>{item.user.name}</span>
+                    <span className={styles.date}>{item.createdAt.substring(0,10)}</span>
                   </div>
                 </div>
-                <p className={styles.desc}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, placeat possimus quos temporibus eligendi exercitationem excepturi nihil quam in error officiis accusamus id molestiae nesciunt. Nobis quod quibusdam explicabo voluptates itaque quaerat veniam, praesentium temporibus aliquam enim saepe nemo molestiae, a aperiam similique nulla totam dolores nihil modi perspiciatis distinctio.</p>
+                <p className={styles.desc}>{item.desc}</p>
               </div>
-              <div className={styles.comment} >
-                <div className={styles.user}>
-                    <Image
-                      src='/p1.jpeg'
-                      alt=""
-                      width={50}
-                      height={50}
-                      className={styles.image}
-                    />
-                  
-                  <div className={styles.userInfo}>
-                    <span className={styles.username}>zakaria</span>
-                    <span className={styles.date}>02.12.24</span>
-                  </div>
-                </div>
-                <p className={styles.desc}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum, placeat possimus quos temporibus eligendi exercitationem excepturi nihil quam in error officiis accusamus id molestiae nesciunt. Nobis quod quibusdam explicabo voluptates itaque quaerat veniam, praesentium temporibus aliquam enim saepe nemo molestiae, a aperiam similique nulla totam dolores nihil modi perspiciatis distinctio.</p>
-              </div>
+            ))}
             
       </div>
 	</div>
