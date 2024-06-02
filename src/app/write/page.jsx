@@ -1,3 +1,4 @@
+'use client'
 import { useClient } from 'next/dynamic';
 import Image from "next/image";
 import styles from "./write.module.css";
