@@ -1,5 +1,4 @@
-"use client";
-
+import { useClient } from 'next/dynamic';
 import Image from "next/image";
 import styles from "./write.module.css";
 import { useEffect, useState } from "react";
@@ -61,7 +60,6 @@ const WritePage = () => {
     file && upload();
   }, [file]);
 
-  if (typeof window === 'undefined') return null; 
 
   
 
@@ -141,7 +139,6 @@ const WritePage = () => {
           </div>
         )}
         
-{typeof window!== 'undefined' && (
   <ReactQuill
     className={styles.textArea}
     theme="bubble"
@@ -149,7 +146,7 @@ const WritePage = () => {
     onChange={setValue}
     placeholder="Tell your story..."
   />
-)}
+
       </div>
       <button className={styles.publish} onClick={handleSubmit}>
         Publish
@@ -158,4 +155,4 @@ const WritePage = () => {
   );
 };
 
-export default WritePage;
+export default useClient(WritePage);
