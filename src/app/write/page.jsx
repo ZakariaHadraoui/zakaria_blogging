@@ -1,7 +1,8 @@
 import Image from "next/image";
 import styles from "./write.module.css";
+import { useEffect, useState } from "react";
 import "react-quill/dist/quill.bubble.css";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import {
   getStorage,
@@ -10,48 +11,64 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { app } from "../../utils/firebase";
-import ReactQuill from "react-quill";
+import dynamic from 'next/dynamic'; // Import 'dynamic' from Next.js
+
+// Import ReactQuill dynamically to prevent server-side rendering issues
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const WritePage = () => {
   const { status } = useSession();
   const router = useRouter();
 
-  let open = false;
-  let file = null;
-  let media = "";
-  let value = "";
-  let title = "";
-  let catSlug = "";
+  const [open, setOpen] = useState(false);
+  const [file, setFile] = useState(null);
+  const [media, setMedia] = useState("");
+  const [value, setValue] = useState("");
+  const [title, setTitle] = useState("");
+  const [catSlug, setCatSlug] = useState("");
 
-  const handleFileChange = (file) => {
+  useEffect(() => {
+    // Initialize Firebase storage only on the client-side
     const storage = getStorage(app);
-    const name = new Date().getTime() + file.name;
-    const storageRef = ref(storage, name);
 
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-        }
-      },
-      (error) => {},
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          media = downloadURL;
-        });
+    const upload = () => {
+      if (file) {
+        const name = new Date().getTime() + file.name;
+        const storageRef = ref(storage, name);
+  
+        const uploadTask = uploadBytesResumable(storageRef, file);
+  
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log("Upload is " + progress + "% done");
+            switch (snapshot.state) {
+              case "paused":
+                console.log("Upload is paused");
+                break;
+              case "running":
+                console.log("Upload is running");
+                break;
+            }
+          },
+          (error) => {
+            console.error("Error uploading file:", error);
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              setMedia(downloadURL);
+            }).catch((error) => {
+              console.error("Error getting download URL:", error);
+            });
+          }
+        );
       }
-    );
-  };
+    };
+
+    upload();
+  }, [file]);
 
   if (status === "loading") {
     return <div className={styles.loading}>Loading...</div>;
@@ -59,11 +76,11 @@ const WritePage = () => {
 
   const slugify = (str) =>
     str
-     .toLowerCase()
-     .trim()
-     .replace(/[^\w\s-]/g, "")
-     .replace(/[\s_-]+/g, "-")
-     .replace(/^-+|-+$/g, "");
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_-]+/g, "-")
+      .replace(/^-+|-+$/g, "");
 
   const handleSubmit = async () => {
     const res = await fetch("/api/posts", {
@@ -73,7 +90,7 @@ const WritePage = () => {
         desc: value,
         img: media,
         slug: slugify(title),
-        catSlug: catSlug || "style", //If not selected, choose the general category
+        catSlug: catSlug || "style", // If not selected, choose the general category
       }),
     });
 
@@ -89,11 +106,11 @@ const WritePage = () => {
         type="text"
         placeholder="Title"
         className={styles.input}
-        onChange={(e) => (title = e.target.value)}
+        onChange={(e) => setTitle(e.target.value)}
       />
       <select
         className={styles.select}
-        onChange={(e) => (catSlug = e.target.value)}
+        onChange={(e) => setCatSlug(e.target.value)}
       >
         <option value="style">style</option>
         <option value="fashion">fashion</option>
@@ -105,7 +122,7 @@ const WritePage = () => {
       <div className={styles.editor}>
         <button
           className={styles.button}
-          onClick={() => (open =!open)}
+          onClick={() => setOpen(!open)}
         >
           <Image src="/plus.png" alt="" width={16} height={16} />
         </button>
@@ -114,10 +131,7 @@ const WritePage = () => {
             <input
               type="file"
               id="image"
-              onChange={(e) => {
-                file = e.target.files[0];
-                handleFileChange(e.target.files[0]);
-              }}
+              onChange={(e) => setFile(e.target.files[0])}
               style={{ display: "none" }}
             />
             <button className={styles.addButton}>
@@ -137,7 +151,7 @@ const WritePage = () => {
           className={styles.textArea}
           theme="bubble"
           value={value}
-          onChange={(newValue) => (value = newValue)}
+          onChange={setValue}
           placeholder="Tell your story..."
         />
       </div>
