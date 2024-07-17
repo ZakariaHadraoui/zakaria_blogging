@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import styles from "./write.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import "react-quill/dist/quill.bubble.css";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -26,7 +26,7 @@ const WritePage = () => {
   const [title, setTitle] = useState("");
   const [catSlug, setCatSlug] = useState("");
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const storage = getStorage(app);
     const upload = () => {
       const name = new Date().getTime() + file.name;
