@@ -1,6 +1,6 @@
 'use client'
 import Image from 'next/image';
-import styles from './writePage.module.css';
+import styles from './write.module.css';
 import { useEffect, useState } from 'react';
 import 'react-quill/dist/quill.bubble.css';
 import { useRouter } from 'next/router';
@@ -11,7 +11,7 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from 'firebase/storage';
-import { app } from '@/utils/firebase';
+import { app } from '../../utils/firebase';
 import ReactQuill from 'react-quill';
 
 const WritePage = () => {
@@ -69,24 +69,7 @@ const WritePage = () => {
     file && uploadFile();
   }, [file]); // Dependency on 'file' ensures this effect runs when 'file' changes
 
-  useEffect(() => {
-    // Load Stripe script on component mount
-    const loadStripeScript = () => {
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = 'https://js.stripe.com/v3/';
-
-      document.head.appendChild(script);
-
-      script.onload = () => {
-        // Stripe script loaded successfully
-        console.log('Stripe script loaded');
-        // You can initialize Stripe or handle other logic here
-      };
-    };
-
-    loadStripeScript(); // Call the function to load Stripe script
-  }, []); // Empty dependency array ensures this effect runs only once on mount
+ 
 
   useEffect(() => {
     if (status === 'unauthenticated') {
