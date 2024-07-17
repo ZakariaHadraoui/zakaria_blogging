@@ -6,7 +6,7 @@ import Image from "next/image";
 
 const CategoryList = async () => {
   const getData = async () => {
-    const res = await fetch("http://localhost:3000/api/categories", {
+    const res = await fetch("https://zakaria-blogging-ieu6.vercel.app/api/categories", {
       cache: "no-store",
     });
   

@@ -36,7 +36,7 @@ function Comments({postSlug}) {
   };
 
 
-  const {data,isLoading,mutate}=useSWR(`http://localhost:3000/api/comments?postSlug=${postSlug}`,
+  const {data,isLoading,mutate}=useSWR(`https://zakaria-blogging-ieu6.vercel.app/api/comments?postSlug=${postSlug}`,
     fetcher
   )
 	const {status} =useSession()
