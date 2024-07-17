@@ -4,7 +4,7 @@ import styles from './write.module.css';
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.bubble.css';
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import {
   getStorage,
@@ -16,7 +16,7 @@ import { app } from '../../utils/firebase';
 
 const WritePage = () => {
   const { status } = useSession();
-  const router = useRouter();
+  // const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const Quill = dynamic(() => import('react-quill'), {
@@ -74,11 +74,11 @@ const WritePage = () => {
 
  
 
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/');
-    }
-  }, [status, router]); // Dependency on 'status' ensures redirection when authentication status changes
+  // useEffect(() => {
+  //   if (status === 'unauthenticated') {
+  //     router.push('/');
+  //   }
+  // }, [status, router]); // Dependency on 'status' ensures redirection when authentication status changes
 
   const slugify = (str) =>
     str
@@ -104,12 +104,12 @@ const WritePage = () => {
         }),
       });
 
-      if (res.status === 200) {
-        const data = await res.json();
-        router.push(`/posts/${data.slug}`);
-      } else {
-        throw new Error('Failed to save post');
-      }
+      // if (res.status === 200) {
+      //   const data = await res.json();
+      //   router.push(`/posts/${data.slug}`);
+      // } else {
+      //   throw new Error('Failed to save post');
+      // }
     } catch (error) {
       console.error('Error publishing post:', error);
       // Handle error state or display error message to user
