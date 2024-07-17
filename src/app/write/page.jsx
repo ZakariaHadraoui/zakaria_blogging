@@ -1,7 +1,5 @@
-'use client'
 import Image from "next/image";
 import styles from "./write.module.css";
-import { useState } from "react";
 import "react-quill/dist/quill.bubble.css";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -18,12 +16,12 @@ const WritePage = () => {
   const { status } = useSession();
   const router = useRouter();
 
-  const [open, setOpen] = useState(false);
-  const [file, setFile] = useState(null);
-  const [media, setMedia] = useState("");
-  const [value, setValue] = useState("");
-  const [title, setTitle] = useState("");
-  const [catSlug, setCatSlug] = useState("");
+  let open = false;
+  let file = null;
+  let media = "";
+  let value = "";
+  let title = "";
+  let catSlug = "";
 
   const handleFileChange = (file) => {
     const storage = getStorage(app);
@@ -49,7 +47,7 @@ const WritePage = () => {
       (error) => {},
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          setMedia(downloadURL);
+          media = downloadURL;
         });
       }
     );
@@ -61,11 +59,11 @@ const WritePage = () => {
 
   const slugify = (str) =>
     str
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/[\s_-]+/g, "-")
-      .replace(/^-+|-+$/g, "");
+     .toLowerCase()
+     .trim()
+     .replace(/[^\w\s-]/g, "")
+     .replace(/[\s_-]+/g, "-")
+     .replace(/^-+|-+$/g, "");
 
   const handleSubmit = async () => {
     const res = await fetch("/api/posts", {
@@ -91,9 +89,12 @@ const WritePage = () => {
         type="text"
         placeholder="Title"
         className={styles.input}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={(e) => (title = e.target.value)}
       />
-      <select className={styles.select} onChange={(e) => setCatSlug(e.target.value)}>
+      <select
+        className={styles.select}
+        onChange={(e) => (catSlug = e.target.value)}
+      >
         <option value="style">style</option>
         <option value="fashion">fashion</option>
         <option value="food">food</option>
@@ -102,7 +103,10 @@ const WritePage = () => {
         <option value="coding">coding</option>
       </select>
       <div className={styles.editor}>
-        <button className={styles.button} onClick={() => setOpen(!open)}>
+        <button
+          className={styles.button}
+          onClick={() => (open =!open)}
+        >
           <Image src="/plus.png" alt="" width={16} height={16} />
         </button>
         {open && (
@@ -111,7 +115,7 @@ const WritePage = () => {
               type="file"
               id="image"
               onChange={(e) => {
-                setFile(e.target.files[0]);
+                file = e.target.files[0];
                 handleFileChange(e.target.files[0]);
               }}
               style={{ display: "none" }}
@@ -133,7 +137,7 @@ const WritePage = () => {
           className={styles.textArea}
           theme="bubble"
           value={value}
-          onChange={setValue}
+          onChange={(newValue) => (value = newValue)}
           placeholder="Tell your story..."
         />
       </div>
