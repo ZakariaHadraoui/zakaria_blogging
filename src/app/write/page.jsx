@@ -12,13 +12,15 @@ import {
   getDownloadURL,
 } from 'firebase/storage';
 import { app } from '../../utils/firebase';
-import ReactQuill from 'react-quill';
 
 const WritePage = () => {
   const { status } = useSession();
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
+  const Quill = dynamic(() => import('react-quill'), {
+    ssr: false, // disable server-side rendering for Quill
+  });
   const [file, setFile] = useState(null);
   const [media, setMedia] = useState('');
   const [value, setValue] = useState('');
@@ -159,7 +161,7 @@ const WritePage = () => {
             </button>
           </div>
         )}
-        <ReactQuill
+        <Quill
           className={styles.textArea}
           theme="bubble"
           value={value}
