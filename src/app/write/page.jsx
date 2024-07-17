@@ -2,6 +2,7 @@
 import Image from 'next/image';
 import styles from './write.module.css';
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import 'react-quill/dist/quill.bubble.css';
 // import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
