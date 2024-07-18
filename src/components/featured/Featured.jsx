@@ -14,9 +14,9 @@ const Featured = () => {
           <Image src="/p1.jpeg" alt="" fill className={styles.image} />
         </div>
         <div className={styles.textContainer}>
-          <h1 className={styles.postTitle}>Lorem ipsum dolor sit amet alim consectetur adipisicing elit.</h1>
+          <h1 className={styles.postTitle}>Welcome to my official blog website .</h1>
           <p className={styles.postDesc}>
-            Welcome to my official blog website .
+            write posts here and discover topics .
           </p>
           <Link href='/' className={styles.button}>Read More</Link>
         </div>
