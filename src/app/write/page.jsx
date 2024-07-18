@@ -1,66 +1,56 @@
-'use client'
-import Image from 'next/image';
-import styles from './write.module.css';
-import { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-import 'react-quill/dist/quill.bubble.css';
-// import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
+"use client";
+
+import Image from "next/image";
+import styles from "./write.module.css";
+import { useEffect, useState } from "react";
+import "react-quill/dist/quill.bubble.css";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
   getStorage,
   ref,
   uploadBytesResumable,
   getDownloadURL,
-} from 'firebase/storage';
-import { app } from '../../utils/firebase';
+} from "firebase/storage";
+import { app } from "../../utils/firebase";
+import ReactQuill from "react-quill";
 
 const WritePage = () => {
   const { status } = useSession();
-  // const router = useRouter();
+  const router = useRouter();
 
   const [open, setOpen] = useState(false);
-  const Quill = dynamic(() => import('react-quill'), {
-    ssr: false, // disable server-side rendering for Quill
-  });
   const [file, setFile] = useState(null);
-  const [media, setMedia] = useState('');
-  const [value, setValue] = useState('');
-  const [title, setTitle] = useState('');
-  const [catSlug, setCatSlug] = useState('');
+  const [media, setMedia] = useState("");
+  const [value, setValue] = useState("");
+  const [title, setTitle] = useState("");
+  const [catSlug, setCatSlug] = useState("");
 
   useEffect(() => {
-    // Firebase Storage initialization
     const storage = getStorage(app);
-
-    // Function to handle file upload
-    const uploadFile = () => {
-      if (!file) return;
-
+    const upload = () => {
       const name = new Date().getTime() + file.name;
       const storageRef = ref(storage, name);
+
       const uploadTask = uploadBytesResumable(storageRef, file);
 
-      // Event listeners for upload progress and completion
       uploadTask.on(
-        'state_changed',
+        "state_changed",
         (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
           switch (snapshot.state) {
-            case 'paused':
-              console.log('Upload is paused');
+            case "paused":
+              console.log("Upload is paused");
               break;
-            case 'running':
-              console.log('Upload is running');
+            case "running":
+              console.log("Upload is running");
               break;
           }
         },
-        (error) => {
-          console.error('Error uploading file:', error);
-          // Handle upload errors here
-        },
+        (error) => {},
         () => {
-          // Upload completed successfully, get download URL
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setMedia(downloadURL);
           });
@@ -68,51 +58,41 @@ const WritePage = () => {
       );
     };
 
-    // Trigger file upload when file state changes
-    file && uploadFile();
-  }, [file]); // Dependency on 'file' ensures this effect runs when 'file' changes
+    file && upload();
+  }, [file]);
 
- 
+  if (status === "loading") {
+    return <div className={styles.loading}>Loading...</div>;
+  }
 
-  // useEffect(() => {
-  //   if (status === 'unauthenticated') {
-  //     router.push('/');
-  //   }
-  // }, [status, router]); // Dependency on 'status' ensures redirection when authentication status changes
+  // if (status === "unauthenticated") {
+  //   router.push("/");
+  // }
 
   const slugify = (str) =>
     str
       .toLowerCase()
       .trim()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/[\s_-]+/g, '-')
-      .replace(/^-+|-+$/g, '');
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_-]+/g, "-")
+      .replace(/^-+|-+$/g, "");
 
   const handleSubmit = async () => {
-    try {
-      const res = await fetch('/api/posts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title,
-          desc: value,
-          img: media,
-          slug: slugify(title),
-          catSlug: catSlug || 'style', // Default category if not selected
-        }),
-      });
+    const res = await fetch("/api/posts", {
+      method: "POST",
+      body: JSON.stringify({
+        title,
+        desc: value,
+        img: '',
+        slug: slugify(title),
+        catSlug: catSlug || "style", //If not selected, choose the general category
+      }),
+    });
+    console.log(res);
 
-      // if (res.status === 200) {
-      //   const data = await res.json();
-      //   router.push(`/posts/${data.slug}`);
-      // } else {
-      //   throw new Error('Failed to save post');
-      // }
-    } catch (error) {
-      console.error('Error publishing post:', error);
-      // Handle error state or display error message to user
+    if (res.status === 200) {
+      const data = await res.json();
+      router.push(`/posts/${data.slug}`);
     }
   };
 
@@ -122,14 +102,9 @@ const WritePage = () => {
         type="text"
         placeholder="Title"
         className={styles.input}
-        value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
-      <select
-        className={styles.select}
-        value={catSlug}
-        onChange={(e) => setCatSlug(e.target.value)}
-      >
+      <select className={styles.select} onChange={(e) => setCatSlug(e.target.value)}>
         <option value="style">style</option>
         <option value="fashion">fashion</option>
         <option value="food">food</option>
@@ -138,7 +113,7 @@ const WritePage = () => {
         <option value="coding">coding</option>
       </select>
       <div className={styles.editor}>
-        <button className={styles.button} onClick={() => setOpen(!open)}>
+        {/* <button className={styles.button} onClick={() => setOpen(!open)}>
           <Image src="/plus.png" alt="" width={16} height={16} />
         </button>
         {open && (
@@ -147,7 +122,7 @@ const WritePage = () => {
               type="file"
               id="image"
               onChange={(e) => setFile(e.target.files[0])}
-              style={{ display: 'none' }}
+              style={{ display: "none" }}
             />
             <button className={styles.addButton}>
               <label htmlFor="image">
@@ -161,8 +136,8 @@ const WritePage = () => {
               <Image src="/video.png" alt="" width={16} height={16} />
             </button>
           </div>
-        )}
-        <Quill
+        )} */}
+        <ReactQuill
           className={styles.textArea}
           theme="bubble"
           value={value}
