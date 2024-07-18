@@ -13,3 +13,28 @@ export const GET = async () => {
     );
   }
 };
+
+
+export const POST = async (req) => {
+  // const session = await getAuthSession();
+
+  // if (!session) {
+  //   return new NextResponse(
+  //     JSON.stringify({ message: "Not Authenticated!" }, { status: 401 })
+  //   );
+  // }
+
+  try {
+    const body = await req.json();
+    const post = await prisma.post.create({
+      data: { ...body, postSlug: 'kikopokakapi@gmail.com' },
+    });
+
+    return new NextResponse(JSON.stringify(post, { status: 200 }));
+  } catch (err) {
+    console.log(err);
+    return new NextResponse(
+      JSON.stringify({ message: "Something went wrong!" }, { status: 500 })
+    );
+  }
+};

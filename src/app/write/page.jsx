@@ -86,16 +86,17 @@ const WritePage = () => {
       body: JSON.stringify({
         title,
         desc: value,
-        img: '',
         slug: slugify(title),
-        catSlug: catSlug || "style", //If not selected, choose the general category
+        catSlug:  "style", //If not selected, choose the general category
       }),
-    });
-    console.log(res);
+    })
+    
 
     if (res.status === 200) {
       const data = await res.json();
+      console.log(data);
       router.push(`/posts/${data.slug}`);
+
     }
   };
 
