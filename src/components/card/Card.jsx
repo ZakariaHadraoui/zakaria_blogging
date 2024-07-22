@@ -15,14 +15,13 @@ function Card({key,data}) {
   return (
     <div className={styles.container} key={key}>
        <div className={styles.imageContainer}>
-        {data.img ? <Image src={data.img} fill className={styles.image}/> : ''}
+        {/* {data.img ? <Image src={data.img} fill className={styles.image}/> : ''} */}
        
 	 </div>
        <div className={styles.textContainer}>
        <div className={styles.userImageContainer}>
-               {data.img ?  <Image src={data.user.image} alt="" fill className={styles.avatar} />:''}
+               {/* {data.user ?  <Image src={data.user.image} alt="" fill className={styles.avatar} />:''} */}
         </div>
-         <span>by : <span className={styles.user}>  {data.user.name}</span></span>
 
             <div className={styles.detail}>
                   <span>category :<span className={styles.category}>    {data.catSlug} </span> </span>

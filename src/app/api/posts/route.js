@@ -35,7 +35,9 @@ export const GET = async (req) => {
   
   try {
     const [posts, count] = await prisma.$transaction([
-      prisma.post.findMany(),
+      prisma.post.findMany({
+        where: query.where 
+      }),
       prisma.post.count({ where: query.where }),
     ]);
     return new NextResponse(JSON.stringify({ posts, count }, { status: 200 }));
@@ -54,13 +56,13 @@ export const GET = async (req) => {
 
 // CREATE A POST
 export const POST = async (req) => {
-  const session = await getAuthSession();
+  // const session = await getAuthSession();
 
-  if (!session) {
-    return new NextResponse(
-      JSON.stringify({ message: "Not Authenticated!" }, { status: 401 })
-    );
-  }
+  // if (!session) {
+  //   return new NextResponse(
+  //     JSON.stringify({ message: "Not Authenticated!" }, { status: 401 })
+  //   );
+  // }
 
   try {
     const body = await req.json();
@@ -71,7 +73,7 @@ export const POST = async (req) => {
         desc:body.desc,
         catSlug:body.catSlug,
         img:body.img,
-        userEmail: session.user.email,
+        userEmail: 'za@gmail.com',
         
        
 

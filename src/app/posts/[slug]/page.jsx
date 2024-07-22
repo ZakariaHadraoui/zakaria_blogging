@@ -22,14 +22,47 @@ const getData = async (slug) => {
 
 async function SinglePostPage({params}) {
   const {slug}=params
-  const post = await getData(slug)
-  console.log(post)
+  const data = await getData(slug)
   
  
 
   return (
-    <h1 className={styles.title}>{post.title}</h1>
+<div className={styles.container}>
+      <div className={styles.infoContainer}>
+        <div className={styles.textContainer}>
+          <h1 className={styles.title}>{data?.title}</h1>
+          <div className={styles.user}>
+            {data?.user?.image && (
+              <div className={styles.userImageContainer}>
+                <Image src={data.user.image} alt="" fill className={styles.avatar} />
+              </div>
+            )}
+            <div className={styles.userTextContainer}>
+              <span className={styles.username}>{data?.user.name}</span>
+              <span className={styles.date}>01.01.2024</span>
+            </div>
+          </div>
+        </div>
+        {data?.img && (
+          <div className={styles.imageContainer}>
+            <Image src={data.img} alt="" fill className={styles.image} />
+          </div>
+        )}
+      </div>
+      <div className={styles.content}>
+        <div className={styles.post}>
+          <div className={styles.description}>
+			  <p>{data.desc}</p>
 
+		  </div>
+          <div className={styles.comment}>
+            <Comments postSlug={slug}/>
+          </div>
+        </div>
+        <Menu />
+      </div>
+    </div>
+  
   )
 }
 
