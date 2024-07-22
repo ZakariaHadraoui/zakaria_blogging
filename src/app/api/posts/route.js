@@ -35,7 +35,7 @@ export const GET = async (req) => {
   
   try {
     const [posts, count] = await prisma.$transaction([
-      prisma.post.findMany({}),
+      prisma.post.findMany(),
       prisma.post.count({ where: query.where }),
     ]);
     return new NextResponse(JSON.stringify({ posts, count }, { status: 200 }));
@@ -64,8 +64,20 @@ export const POST = async (req) => {
 
   try {
     const body = await req.json();
-    const post = await prisma.post.create({
-      data: { ...body, userEmail: session.user.email },
+    const post = await prisma.Post.create({
+      data: { 
+        title:body.title,
+        slug:body.slug,
+        desc:body.desc,
+        catSlug:body.catSlug,
+        img:body.img,
+        userEmail: session.user.email,
+        
+       
+
+
+         
+        },
     });
 
     return new NextResponse(JSON.stringify(post, { status: 200 }));

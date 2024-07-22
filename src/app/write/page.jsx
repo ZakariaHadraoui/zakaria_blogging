@@ -84,9 +84,10 @@ const WritePage = () => {
     const res = await fetch("/api/posts", {
       method: "POST",
       body: JSON.stringify({
-        title,
-        desc: value,
-        slug: slugify(title),
+        title:'hhhh',
+        desc: 'test',
+        img:'zaza.jpg',
+        slug: 'hhhh',
         catSlug:  "style", //If not selected, choose the general category
       }),
     })
