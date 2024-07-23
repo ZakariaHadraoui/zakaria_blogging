@@ -6,7 +6,7 @@ import Comments from '@/components/comments/comments'
 
 const getData = async (slug) => {
 	const res = await fetch(
-	  `https://zakaria-blogging-ieu6.vercel.app/api/posts/${slug}`,
+	  `https://zakaria-blogging-ieu6.vercel.appapi/posts/${slug}`,
 	  {
 		cache: "no-store",
 	  }
