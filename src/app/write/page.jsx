@@ -68,9 +68,9 @@ const WritePage = () => {
     return <div className={styles.loading}>Loading...</div>;
   }
 
-  // if (status === "unauthenticated") {
-  //   router.push("/");
-  // }
+  if (status === "unauthenticated") {
+    router.push("/");
+  }
 
   const slugify = (str) =>
     str
@@ -117,7 +117,7 @@ const WritePage = () => {
         <option value="coding">coding</option>
       </select>
       <div className={styles.editor}>
-        {/* <button className={styles.button} onClick={() => setOpen(!open)}>
+        <button className={styles.button} onClick={() => setOpen(!open)}>
           <Image src="/plus.png" alt="" width={16} height={16} />
         </button>
         {open && (
@@ -140,7 +140,7 @@ const WritePage = () => {
               <Image src="/video.png" alt="" width={16} height={16} />
             </button>
           </div>
-        )} */}
+        )}
         <DynamicReactQuill
           className={styles.textArea}
           theme="bubble"
