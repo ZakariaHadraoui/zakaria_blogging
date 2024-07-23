@@ -15,12 +15,12 @@ function Card({key,data}) {
   return (
     <div className={styles.container} key={key}>
        <div className={styles.imageContainer}>
-        {/* {data.img ? <Image src={data.img} fill className={styles.image}/> : ''} */}
+        {data.img ? <Image src={data.img} fill className={styles.image}/> : ''}
        
 	 </div>
        <div className={styles.textContainer}>
        <div className={styles.userImageContainer}>
-               {/* {data.user ?  <Image src={data.user.image} alt="" fill className={styles.avatar} />:''} */}
+               {data.user ?  <Image src={data.user.image} alt="" fill className={styles.avatar} />:''}
         </div>
 
             <div className={styles.detail}>
