@@ -17,7 +17,7 @@ function Card({key,data}) {
        <div className={styles.imageContainer}>
         {data.img ? <Image src={data.img} fill className={styles.image}/> : ''}
        
-	 </div>
+	     </div>
        <div className={styles.textContainer}>
        <div className={styles.userImageContainer}>
                {data.user ?  <Image src={data.user.image} alt="" fill className={styles.avatar} />:''}

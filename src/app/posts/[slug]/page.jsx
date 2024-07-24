@@ -39,7 +39,7 @@ async function SinglePostPage({params}) {
             )}
             <div className={styles.userTextContainer}>
               <span className={styles.username}>{data?.user.name}</span>
-              <span className={styles.date}>01.01.2024</span>
+              <span className={styles.date}> {data.createdAt .substring(0,10)} </span>
             </div>
           </div>
         </div>

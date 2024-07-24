@@ -7,7 +7,7 @@ const Featured = () => {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>
-        <b>Hey, The Full Stacker here!</b> Discover my stories and creative ideas.
+        <b>Hey, Zakaria here!</b> Discover my stories .
       </h1>
       <div className={styles.post}>
         <div className={styles.imgContainer}>
@@ -18,7 +18,7 @@ const Featured = () => {
           <p className={styles.postDesc}>
             write posts here and discover topics .
           </p>
-          <Link href='/' className={styles.button}>Read More</Link>
+          {/* <Link href='/' className={styles.button}>Read More</Link> */}
         </div>
       </div>
     </div>
