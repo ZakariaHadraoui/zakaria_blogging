@@ -13,7 +13,6 @@ const BlogPage = ({ searchParams }) => {
       <h1 className={styles.title}>{cat} Blogs</h1>
       <div className={styles.content}>
         <CardList page={page} cat={cat}/>
-        <Menu />
       </div>
     </div>
   );
