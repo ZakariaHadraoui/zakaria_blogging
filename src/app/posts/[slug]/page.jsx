@@ -59,7 +59,7 @@ async function SinglePostPage({params}) {
             <Comments postSlug={slug}/>
           </div>
         </div>
-        <Menu />
+        {/* <Menu /> */}
       </div>
     </div>
   
