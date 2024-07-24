@@ -51,10 +51,10 @@ async function SinglePostPage({params}) {
       </div>
       <div className={styles.content}>
         <div className={styles.post}>
-          <div className={styles.description}>
-			  <p>{data.desc}</p>
-
-		  </div>
+        <div
+            className={styles.description}
+            dangerouslySetInnerHTML={{ __html: data?.desc }}
+          />
           <div className={styles.comment}>
             <Comments postSlug={slug}/>
           </div>
