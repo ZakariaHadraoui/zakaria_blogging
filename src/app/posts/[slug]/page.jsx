@@ -4,7 +4,6 @@ import Image from 'next/image'
 import Menu from '@/components/menu/Menu'
 import Comments from '@/components/comments/comments'
 
-
 const getData = async (slug) => {
 	const res = await fetch(
 	  `https://zakaria-blogging-ieu6.vercel.app/api/posts/${slug}`,
@@ -24,9 +23,6 @@ const getData = async (slug) => {
 async function SinglePostPage({params}) {
   const {slug}=params
   const data = await getData(slug)
-
-
-  
   
  
 
@@ -55,8 +51,10 @@ async function SinglePostPage({params}) {
       </div>
       <div className={styles.content}>
         <div className={styles.post}>
-       
-        {renderDescription()}
+          <div
+            className={styles.description}
+            dangerouslySetInnerHTML={{ __html: data?.desc }}
+          />
           <div className={styles.comment}>
             <Comments postSlug={slug}/>
           </div>
