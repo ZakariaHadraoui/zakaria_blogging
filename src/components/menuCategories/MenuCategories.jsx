@@ -5,10 +5,10 @@ import Link from 'next/link'
 function MenuCategories() {
   return (
 	<div className={styles.categoryList}>
-	<Link href='/blog?cat=style' className={`${styles.categoryItem} ${styles.style}`}>Style</Link>
-	<Link href='/blog?cat=fashion' className={`${styles.categoryItem} ${styles.food}`}>fashion</Link>
-	<Link href='/blog?cat=culture' className={`${styles.categoryItem} ${styles.culture}`}>culture</Link>
-	<Link href='/blog?cat=fashion' className={`${styles.categoryItem} ${styles.fashion}`}>fashion</Link>
+	<Link href='/blog?cat=html' className={`${styles.categoryItem} ${styles.style}`}>html</Link>
+	<Link href='/blog?cat=css' className={`${styles.categoryItem} ${styles.food}`}>css</Link>
+	<Link href='/blog?cat=react' className={`${styles.categoryItem} ${styles.culture}`}>react js</Link>
+	<Link href='/blog?cat=laravel' className={`${styles.categoryItem} ${styles.fashion}`}>laravel</Link>
 
     </div>
   )
